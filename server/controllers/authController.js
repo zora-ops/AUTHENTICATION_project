@@ -1,14 +1,16 @@
 import bcrypt from 'bcryptjs'
-import  jwt  from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import User from '../models/userModel.js'
 import cookieOptions from '../config/cookie.js'
-
+import transporter from '../config/nodeMailer.js'
+import cookieParser from 'cookie-parser'
 
 //###############################---------REGISTER CONTROLLER---------##############################
+
 export const register = async (req, res) => {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) return res.status(400).json({message: "Missing details" })
+    if (!name || !email || !password) return res.status(400).json({ message: "Missing details" })
 
     try {
 
@@ -24,6 +26,16 @@ export const register = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         res.cookie('token', token, cookieOptions)
+
+        //=======-----------sending mail------------============
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
+            subject: "welcome to greatstack",
+            text: `Your email account has been registered successfully to our database: ${email}`
+        }
+
+        await transporter.sendMail(mailOptions)
 
         return res.status(200).json({ message: "user created successfully" });
 
@@ -66,8 +78,79 @@ export const logout = async (req, res) => {
     try {
         res.clearCookie('token', cookieOptions)
 
-        return res.status(200).json({message: "logout success"})
+        return res.status(200).json({ message: "logout success" })
     } catch (error) {
         return res.status(400).json({ message: "logout failed" });
+    }
+}
+
+//############################---------------verify otp---------------#################################
+export const sendVerifyOtp = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await User.findById(userId);
+
+        if (user.isAccountVerified) return res.status(400).json({ message: "account already verified" });
+
+        const otp = String(Math.floor(100000 + Math.random() * 900000))
+
+        user.verifyOtp = otp;
+
+        user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+        await user.save();
+
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: "Account verification OTP",
+            text: `your OTP is: ${otp}`
+        }
+        console.log(user.verifyOtp)
+
+        await transporter.sendMail(mailOptions)
+
+        res.status(200).json({message: "verification has been sent on the email"})
+
+    } catch (error) {
+        res.status(400).json({message: error.message })
+    }
+}
+
+//############################--------------verify email---------------################################
+export const verifyEmail = async (req, res) => {
+    const { userId, otp } = req.body;
+
+    if(!userId || !otp) return res.status(400).json({message: "missing details"});
+
+    try {
+        
+        const user = await User.findById(userId);
+
+        if(!user) return res.status(400).json({message: "user not found"});
+        if(user.verifyOtp === '' || user.verifyOtp !== otp) return res.status(400).json({message: "invalid OTP"});
+        if(user.verifyOtpExpireAt < Date.now) return res.status(400).json({message: "OTP expired"})
+        
+        user.isAccountVerified = true;
+        user.verifyOtp = '';
+        user.verifyOtpExpireAt = '';
+
+        user.save();
+
+        console.log(user.isAccountVerified)
+
+        res.status(200).json({message: "Email verified successfully"});
+
+    } catch (error) {
+        res.status(400).json({message: error.message})
+    }
+}
+
+//###########################------------isLoggedIn----------------#####################################
+export const isAuthenticated = async (req,res) => {
+    try {
+        res.status(200).json({message: "user is logged in"})
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
 }

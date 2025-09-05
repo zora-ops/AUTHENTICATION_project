@@ -8,16 +8,19 @@ import authRouter from '../routes/authRoutes.js'
 const app = express();
 const port = process.env.PORT || 5000;
 
+//######################-------MIDDLEWARE--------------#########################
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({credential: true})) 
+app.use(cors({
+    origin: 'http://localhost:5000',
+    credentials: true
+})) 
 
 
 //######################---------API ENDPOINTS------------######################
-app.get('/',(req,res)=>{res.json({avi: "hiv"})});
-
-//######################-------MIDDLEWARE--------------#########################
 app.use('/api/auth', authRouter)
+
+
 
 
 connectDB().then(()=>{
