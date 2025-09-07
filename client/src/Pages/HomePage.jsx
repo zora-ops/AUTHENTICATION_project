@@ -1,33 +1,31 @@
-import { useState } from 'react'
-import Navbar from '../components/Navbar'
+import { useState, useEffect } from 'react'
 
-
+import ProjectIntro from '../components/ProjectIntro';
+import api from '../lib/api';
 
 const HomePage = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to see "Not Logged In" state
-  
-  // Mock user data
-  const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com'
-  };
+  const [data, setData] = useState(null);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  useEffect( () => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get('/user/data');
+        setData(res.data.name);
+      } catch (error) {
+        console.log(error.response.data.message)
+      }
+    }
+
+    fetchUser();
+
+  },[]);
+
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Demo Toggle Button */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <button
-          onClick={() => setIsLoggedIn(!isLoggedIn)}
-          className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 text-sm font-medium"
-        >
-          Toggle Login Status
-        </button>
-      </div>
+    <div className="h-screen">
+      {
+        data ? <ProjectIntro name={data}/> : <ProjectIntro/>
+      }
     </div>
   );
 };

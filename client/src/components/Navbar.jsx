@@ -1,34 +1,67 @@
-import UserStatusIndicator from "./UserStatusIndicator";
-import { Home, Menu } from 'lucide-react'
-import {Link} from 'react-router'
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router';
+import { UserCircle } from 'lucide-react';
 
-const Navbar = ({ isLoggedIn, user }) => {
+const Navbar = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const popupRef = useRef(null);
+
+  // Toggle popup
+  const togglePopup = () => setShowPopup(prev => !prev);
+
+  // Close popup on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowPopup(false);
+      }
+    };
+    if (showPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopup]);
+
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Left side - Logo */}
-          <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center cursor-pointer group">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl flex items-center justify-center mr-3 group-hover:scale-105 transition-transform duration-200 shadow-md">
-                <Link to='/' ><Home className="w-6 h-6 text-white" /></Link>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent">
-                  Auth
-                </h1>
-              </div>
-            </div>
-          </div>
+    <nav className="flex justify-between items-center px-6 py-4 backdrop-blur-xl bg-white/5 border border-white/5 shadow-2xl text-emerald-400 fixed top-0 left-0 w-full z-50 rounded-md">
+      {/* Logo */}
+      <Link to="/" className="text-xl font-bold hover:text-emerald-700 transition-colors duration-200">
+        EDD
+      </Link>
 
+      {/* User Icon */}
+      <div className="relative">
+        <button
+          onClick={togglePopup}
+          className="text-2xl focus:outline-none hover:scale-105 transition-transform duration-200"
+        >
+          <UserCircle size={28} strokeWidth={1.8} />
+        </button>
 
-          {/* Right side - User Status & Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
-            <UserStatusIndicator isLoggedIn={isLoggedIn} user={user} />
-            
-            {/* Mobile menu button */}
+        {/* Popup */}
+        {showPopup && (
+          <div
+            ref={popupRef}
+            className="absolute right-0 mt-2 w-40 bg-emerald-400 text-black shadow-lg z-10 animate-fade-in rounded-sm"
+          >
+            <Link
+              to="/register"
+              className="block px-4 py-2 hover:bg-gray-900 hover:text-emerald-400 transition-colors duration-150 border-b rounded-sm"
+              onClick={() => setShowPopup(false)}
+            >
+              Register
+            </Link>
+            <Link
+              to="/login"
+              className="block px-4 py-2 hover:bg-gray-900 hover:text-emerald-400 transition-colors duration-150 rounded-sm"
+              onClick={() => setShowPopup(false)}
+            >
+              Login
+            </Link>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );
