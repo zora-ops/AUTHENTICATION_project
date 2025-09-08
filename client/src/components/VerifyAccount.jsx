@@ -6,25 +6,24 @@ import api from '../lib/api';
 import { Mail } from 'lucide-react';
 import toast from 'react-hot-toast'
 
-const VerifyOtp = () => {
+const VerifyAccount = () => {
 
-      const [email, setEmail] = useState('');
+      const [otp, setOtp] = useState('');
 
 
     const navigate = useNavigate();
 
     const handleSubmite = async (e) => {
         e.preventDefault()
-        if (!email.trim()) {
+        if (otp !== '') {
             toast.error('All fields are required');
             return
         }
-        setEmail('');
-        console.log(email)
+        setOtp('');
 
         try {
             await api.post('/auth/resetotp', {
-                email
+                otp
             })
             toast.success("user Login successfully");
             navigate('/change-password')
@@ -47,9 +46,9 @@ const VerifyOtp = () => {
           <div className="flex items-center border border-white/30 rounded-md px-3 py-2 bg-white/10 hover:bg-white/20 transition">
             <Mail className="w-5 h-5 text-emerald-400 mr-2" />
             <input
-              type="email"
-              placeholder="Email"
-              value={email}
+              type="otp"
+              placeholder="Otp"
+              value={otp}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full outline-none bg-transparent text-white placeholder:text-gray-400"
             />
@@ -68,4 +67,4 @@ const VerifyOtp = () => {
   );
 };
 
-export default VerifyOtp;
+export default VerifyAccount;

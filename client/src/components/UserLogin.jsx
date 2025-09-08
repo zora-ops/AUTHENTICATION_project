@@ -29,7 +29,7 @@ const UserLogin = () => {
                 email,
                 password
             })
-            toast.success("user registered successfully");
+            toast.success("user Login successfully");
             navigate('/')
         } catch (error) {
             toast.error("Login failed try again");

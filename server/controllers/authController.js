@@ -105,8 +105,7 @@ export const sendVerifyOtp = async (req, res) => {
             to: user.email,
             subject: "Account verification OTP",
             text: `your OTP is: ${otp}`
-        }
-        console.log(user.verifyOtp)
+        }``
 
         await transporter.sendMail(mailOptions)
 
@@ -183,7 +182,7 @@ export const sendResetPassOtp = async (req,res) => {
 
         await transporter.sendMail(mailOptions);
 
-        res.status(400).json({message: "OTP sent Successfully"});
+        res.status(200).json({message: "OTP sent Successfully"});
 
     } catch (error) {
         res.status(400).json({message: error.message});

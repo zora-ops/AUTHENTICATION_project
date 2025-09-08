@@ -1,13 +1,16 @@
 import React from 'react';
 import { Hand } from 'lucide-react';
 
-const ProjectIntro = ({ name }) => {
+const ProjectIntro = ({ data }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900">
       <div className="backdrop-blur-xl bg-white/5 border border-white/20 rounded-2xl p-10 max-w-xl w-full text-center shadow-2xl text-white animate-fade-in">
         {/* Greeting */}
         <div className="flex justify-center items-center gap-3 mb-6">
-          <h1 className="text-4xl font-bold tracking-wide">Hi {name}</h1>
+          <h1 className="text-4xl font-bold tracking-wide">
+            Hi {data?.name ?? <span className="animate-pulse text-gray-400">...</span>}
+          </h1>
+
           <Hand className="text-emerald-400 animate-wave" size={32} strokeWidth={2} />
         </div>
 
@@ -18,7 +21,7 @@ const ProjectIntro = ({ name }) => {
 
         {/* Tech Stack */}
         <p className="text-md leading-relaxed text-gray-300">
-          Built using <span className="text-emerald-400 font-medium">React.js</span>, <span className="text-emerald-400 font-medium">Express.js</span>, <span className="text-emerald-400 font-medium">Tailwind CSS</span>, <span className="text-emerald-400 font-medium">MongoDB</span>, and <span className="text-emerald-400 font-medium">Mongoose</span>.  
+          Built using <span className="text-emerald-400 font-medium">React.js</span>, <span className="text-emerald-400 font-medium">Express.js</span>, <span className="text-emerald-400 font-medium">Tailwind CSS</span>, <span className="text-emerald-400 font-medium">MongoDB</span>, and <span className="text-emerald-400 font-medium">Mongoose</span>.
           Development tools include <span className="text-emerald-300 font-medium">CORS</span>, <span className="text-emerald-300 font-medium">Nodemon</span>, <span className="text-emerald-300 font-medium">React Router</span>, <span className="text-emerald-300 font-medium">Lucide React</span>, and <span className="text-emerald-300 font-medium">React Toastify</span>.
         </p>
       </div>
