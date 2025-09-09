@@ -6,7 +6,6 @@ export const userData = async (req,res) => {
         const userId = req.userId;
 
         const user = await User.findById(userId);
-        console.log(user)
 
         if(!user) return res.status(400).json({message: "user not found"});
 

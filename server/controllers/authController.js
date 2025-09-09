@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken"
 import User from '../models/userModel.js'
 import cookieOptions from '../config/cookie.js'
 import transporter from '../config/nodeMailer.js'
-import cookieParser from 'cookie-parser'
 
 //###############################---------REGISTER CONTROLLER---------##############################
 
@@ -87,9 +86,11 @@ export const logout = async (req, res) => {
 //############################---------------verify otp---------------#################################
 export const sendVerifyOtp = async (req, res) => {
     try {
-        const { userId } = req.body;
-        const user = await User.findById(userId);
 
+        const  userId  = req.userId;
+
+        const user = await User.findById(userId);
+  
         if (user.isAccountVerified) return res.status(400).json({ message: "account already verified" });
 
         const otp = String(Math.floor(100000 + Math.random() * 900000))
@@ -97,29 +98,32 @@ export const sendVerifyOtp = async (req, res) => {
         user.verifyOtp = otp;
 
         user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
-
+ 
         await user.save();
-
+        
+        console.log("passed")
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: "Account verification OTP",
             text: `your OTP is: ${otp}`
-        }``
+        }
+
 
         await transporter.sendMail(mailOptions)
 
         res.status(200).json({message: "verification has been sent on the email"})
 
     } catch (error) {
-        res.status(400).json({message: error.message })
+        res.status(400).json({ message: "got something here" ,})
     }
 }
 
 //############################--------------verify email---------------################################
 export const verifyEmail = async (req, res) => {
-    const { userId, otp } = req.body;
-
+    const {otp}  = req.body;
+    const userId = req.userId
+    console.log(userId, otp)
     if(!userId || !otp) return res.status(400).json({message: "missing details"});
 
     try {
