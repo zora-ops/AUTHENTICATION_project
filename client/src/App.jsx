@@ -4,6 +4,7 @@ import RegisterForm from './components/UserRegister';
 import UserLogin from './components/UserLogin';
 import VerifyOtp from './components/VerifyOtp';
 import ChangePassword from './components/ChangePassword';
+import VerifyAccount from './components/VerifyAccount';
 
 const App = () => {
   return <div className='bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900'>
@@ -13,6 +14,7 @@ const App = () => {
       <Route path='/login' element={<UserLogin/>}/>
       <Route path='/verify-otp' element={<VerifyOtp/>}/>
       <Route path='/change-password' element={<ChangePassword/>} />
+      <Route path='/verify-account' element={<VerifyAccount/>} />
     </Routes>
 </div>
 };

@@ -91,7 +91,7 @@ const RegisterForm = () => {
           >
             Register
           </button>
-          <Link to={'/login'}>
+          <Link to={'/'}>
             <div className='flex justify-end text-emerald-400 hover:text-blue-600 transition'>
               <p>already have an account? Login</p>
             </div>

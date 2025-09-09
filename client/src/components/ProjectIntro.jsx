@@ -1,7 +1,24 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Hand } from 'lucide-react';
 
+import api from '../lib/api';
+
 const ProjectIntro = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleVerify = async () => {
+    
+    try {
+      await api.post('/auth/send-verify-otp')
+      navigate('/verify-account')
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900">
       <div className="backdrop-blur-xl bg-white/5 border border-white/20 rounded-2xl p-10 max-w-xl w-full text-center shadow-2xl text-white animate-fade-in">
@@ -13,6 +30,23 @@ const ProjectIntro = ({ data }) => {
 
           <Hand className="text-emerald-400 animate-wave" size={32} strokeWidth={2} />
         </div>
+        {/* Is verivied */}
+        {data && !data.isAccountVerified &&<div>
+          <button
+          className='border border-emerald-400  text-emerald-400 rounded-b-xl px-2 py-2 font-bold'
+          onClick={handleVerify}
+          >Verify email</button> 
+        </div>
+        }
+
+        {
+          data?.isAccountVerified ? 
+          <div 
+          className='text-emerald-400 rounded-sm p-2 font-bold'
+          >Verified</div> 
+          : null
+        }
+
 
         {/* Description */}
         <p className="text-lg leading-relaxed mb-6 text-gray-200">

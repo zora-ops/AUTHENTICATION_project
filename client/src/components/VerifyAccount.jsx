@@ -15,20 +15,20 @@ const VerifyAccount = () => {
 
     const handleSubmite = async (e) => {
         e.preventDefault()
-        if (otp !== '') {
+        if (otp === '') {
             toast.error('All fields are required');
             return
         }
         setOtp('');
 
         try {
-            await api.post('/auth/resetotp', {
+            await api.post('/auth/verify-account', {
                 otp
             })
-            toast.success("user Login successfully");
-            navigate('/change-password')
+            toast.success("Email verified successfully");
+            navigate('/')
         } catch (error) {
-            toast.error("Login failed try again");
+            toast.error("Invalid OTP");
             console.log(error);
         }
 
@@ -49,7 +49,7 @@ const VerifyAccount = () => {
               type="otp"
               placeholder="Otp"
               value={otp}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setOtp(e.target.value)}
               className="w-full outline-none bg-transparent text-white placeholder:text-gray-400"
             />
           </div>
@@ -57,7 +57,7 @@ const VerifyAccount = () => {
           {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-emerald-400 text-gray-900 py-2 rounded-md hover:bg-emerald-500 transition font-semibold"
+              className="w-full bg-emerald-400 text-gray-900 py-2 rounded-b-xl hover:bg-emerald-500 transition font-semibold"
             >
               Submit
             </button>
