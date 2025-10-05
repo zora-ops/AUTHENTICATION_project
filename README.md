@@ -3,29 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>User Authentication System</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      background-color: #f9f9f9;
-      color: #333;
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    h1, h2 {
-      color: #2c3e50;
-    }
-    code {
-      background-color: #eee;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.95em;
-    }
-    ul {
-      margin-left: 1.5rem;
-    }
-  </style>
+
 </head>
 <body>
 
